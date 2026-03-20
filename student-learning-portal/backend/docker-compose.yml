@@ -1,0 +1,31 @@
+# Docker Compose Configuration
+# ============================
+# For local development with Docker
+
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: ai-mantraas-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DEBUG_MODE=True
+      - FLASK_APP=app.py
+    env_file:
+      - ../../.env
+    volumes:
+      - ./local-data:/app/local-data
+    restart: unless-stopped
+
+  # Frontend static server (optional)
+  frontend:
+    image: nginx:alpine
+    container_name: ai-mantraas-frontend
+    ports:
+      - "8000:80"
+    volumes:
+      - ../../index.html:/usr/share/nginx/html/index.html
+      - ../../for-business.html:/usr/share/nginx/html/for-business.html
+    restart: unless-stopped

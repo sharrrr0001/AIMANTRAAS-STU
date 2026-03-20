@@ -43,8 +43,16 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Flask app
+# Note: index.html is in the project root (two levels up from backend)
 app = Flask(__name__, static_folder=None)
 CORS(app)
+
+# Get the project root directory (two levels up from backend)
+# app.py is at: project-root/student-learning-portal/backend/app.py
+# index.html is at: project-root/index.html
+BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(BACKEND_DIR))
+print(f"PROJECT_ROOT: {PROJECT_ROOT}")
 
 # Configure whitenoise for static file serving
 if WHITENOISE_AVAILABLE:
@@ -153,20 +161,17 @@ def save_to_google_sheets(sheet_name, data, is_list=False):
 @app.route('/')
 def root():
     """Serve index.html for root URL."""
-    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return send_from_directory(root_dir, 'index.html')
+    return send_from_directory(PROJECT_ROOT, 'index.html')
 
 @app.route('/index.html')
 def index_html():
     """Serve index.html explicitly."""
-    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return send_from_directory(root_dir, 'index.html')
+    return send_from_directory(PROJECT_ROOT, 'index.html')
 
 @app.route('/for-business.html')
 def for_business():
     """Serve for-business.html."""
-    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return send_from_directory(root_dir, 'for-business.html')
+    return send_from_directory(PROJECT_ROOT, 'for-business.html')
 
 @app.route('/health')
 def health():
@@ -589,14 +594,12 @@ def initialize_app():
 # Serve favicon from root directory
 @app.route('/favicon.ico')
 def favicon():
-    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return send_from_directory(root_dir, 'bglogo.png', mimetype='image/png')
+    return send_from_directory(PROJECT_ROOT, 'bglogo.png', mimetype='image/png')
 
 # Serve static images
 @app.route('/static/<path:filename>')
 def serve_static(filename):
-    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    return send_from_directory(root_dir, filename)
+    return send_from_directory(PROJECT_ROOT, filename)
 
 
 def create_app():

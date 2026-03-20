@@ -33,18 +33,25 @@ COPY --from=builder /root/.local /root/.local
 # Add local bin to PATH
 ENV PATH=/root/.local/bin:$PATH
 
-# Copy application files
-COPY . .
+# Copy application files (excluding .env and local-data)
+COPY app.py .
+COPY google_sheets.py .
+COPY wsgi.py .
+COPY requirements.txt .
+COPY Procfile .
+COPY runtime.txt .
 
-# Create directory for local data
+# Create directories
 RUN mkdir -p local-data
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
+ENV FLASK_APP=app.py
+ENV DEBUG_MODE=False
 
 # Expose port
-EXPOSE 5000
+EXPOSE $PORT
 
-# Run with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "wsgi:application"]
+# Run with Gunicorn (use dynamic port for cloud platforms)
+CMD ["gunicorn", "--bind", ":$PORT", "--workers", "4", "--timeout", "120", "wsgi:application"]

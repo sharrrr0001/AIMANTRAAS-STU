@@ -15,18 +15,43 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from google_sheets import get_sheets_manager, initialize_sheets
 
-# Load environment variables from .env file in root directory
-env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '.env')
-load_dotenv(env_path)
-print(f"Loading .env from: {env_path}")
+# Try to import whitenoise for static file serving
+try:
+    from whitenoise import WhiteNoise
+    WHITENOISE_AVAILABLE = True
+except ImportError:
+    WHITENOISE_AVAILABLE = False
+    print("Warning: whitenoise not installed. Static files won't be served efficiently.")
+
+# Load environment variables - look in multiple locations
+possible_env_paths = [
+    os.path.join(os.path.dirname(__file__), '.env'),
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'),
+]
+
+for env_path in possible_env_paths:
+    if os.path.exists(env_path):
+        load_dotenv(env_path)
+        print(f"Loading .env from: {env_path}")
+        break
+
+# Get debug mode from environment
+DEBUG_MODE = os.getenv('DEBUG_MODE', 'False').lower() == 'true'
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 CORS(app)
+
+# Configure whitenoise for static file serving
+if WHITENOISE_AVAILABLE:
+    # Find the static files directory
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)))
+    app.wsgi_app = WhiteNoise(app.wsgi_app, root=static_dir, prefix='static/')
+    print(f"Static files will be served from: {static_dir}")
 
 # Configuration
 app.config['JSON_SORT_KEYS'] = False
@@ -123,11 +148,39 @@ def save_to_google_sheets(sheet_name, data, is_list=False):
         return False
 
 
-# ==================== API Routes ====================
+# ==================== Static Files & Health ====================
 
 @app.route('/')
-def index():
-    """Root endpoint."""
+def root():
+    """Serve index.html for root URL."""
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return send_from_directory(root_dir, 'index.html')
+
+@app.route('/index.html')
+def index_html():
+    """Serve index.html explicitly."""
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return send_from_directory(root_dir, 'index.html')
+
+@app.route('/for-business.html')
+def for_business():
+    """Serve for-business.html."""
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return send_from_directory(root_dir, 'for-business.html')
+
+@app.route('/health')
+def health():
+    """Health check endpoint for deployment platforms."""
+    return jsonify({
+        'status': 'healthy',
+        'google_sheets_connected': sheets_manager is not None and sheets_manager.is_connected()
+    })
+
+# ==================== API Routes ====================
+
+@app.route('/api')
+def api_index():
+    """API root endpoint."""
     return jsonify({
         'name': 'AI Mantraas Student Portal API',
         'version': '1.0.0',
@@ -539,7 +592,19 @@ def favicon():
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     return send_from_directory(root_dir, 'bglogo.png', mimetype='image/png')
 
+# Serve static images
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return send_from_directory(root_dir, filename)
+
+
+def create_app():
+    """Create and configure the Flask application."""
+    initialize_app()
+    return app
+
 
 if __name__ == '__main__':
     initialize_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)), debug=DEBUG_MODE)

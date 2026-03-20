@@ -14,10 +14,9 @@ google-api-python-client==2.111.0
 # Data Handling
 python-dotenv==1.0.0
 
-# Server
+# Production Server
+gevent==23.9.1
 gunicorn==21.2.0
 
-# For local data storage fallback
-json
-os
-datetime
+# Static Files (for production)
+whitenoise==6.6.0

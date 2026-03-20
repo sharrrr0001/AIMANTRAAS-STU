@@ -2,6 +2,18 @@
 
 A modern landing page website and student learning portal for AI Mantraas - Transform Your Career with AI Agents. Built with HTML, Tailwind CSS, JavaScript, and a Flask backend API.
 
+## ✅ Quick Start (Frontend + Backend Together)
+
+The Flask backend now serves both the frontend and API. Run this from the backend folder:
+
+```bash
+cd student-learning-portal/backend
+pip install -r requirements.txt
+python app.py
+```
+
+Then open http://localhost:5000 - everything works together!
+
 ## 🚀 Project Structure
 
 ```
@@ -284,6 +296,24 @@ This project is for educational purposes.
 ## 👏 Support
 
 For issues or questions, please contact the development team.
+
+## 🔗 API Endpoints
+
+The backend serves both frontend and API:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Main landing page (index.html) |
+| `/for-business.html` | GET | Business page |
+| `/health` | GET | Health check |
+| `/api` | GET | API info |
+| `/api/join-requests` | GET/POST | Submit join requests |
+| `/api/users` | GET/POST | User management |
+| `/api/lectures` | GET/POST | Lecture management |
+| `/api/live-classes` | GET/POST | Live class management |
+| `/api/plans` | GET/POST | Plan management |
+| `/api/progress` | GET/POST | Progress tracking |
+| `/api/sync` | POST | Sync data to Google Sheets |
 
 ## 🔗 Useful Links
 

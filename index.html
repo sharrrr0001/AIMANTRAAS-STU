@@ -2639,8 +2639,9 @@
             submitBtn.textContent = 'Submitting...';
             submitBtn.disabled = true;
             
-            // Send to Flask backend API
-            fetch('http://localhost:5000/api/join-requests', {
+            // Send to Flask backend API (works both locally and in production)
+            const API_BASE = window.location.origin;
+            fetch(`${API_BASE}/api/join-requests`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

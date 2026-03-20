@@ -591,9 +591,13 @@ def initialize_app():
     logger.info("Application initialized")
 
 
-# Serve favicon from root directory
+# Serve favicon and logo from root directory
 @app.route('/favicon.ico')
 def favicon():
+    return send_from_directory(PROJECT_ROOT, 'bglogo.png', mimetype='image/png')
+
+@app.route('/bglogo.png')
+def logo():
     return send_from_directory(PROJECT_ROOT, 'bglogo.png', mimetype='image/png')
 
 # Serve static images

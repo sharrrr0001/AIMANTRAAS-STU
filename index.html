@@ -2012,12 +2012,12 @@
                 </h2>
                 
                 <!-- Toggle Button with Animation -->
-                <button id="joinToggleBtn" class="toggle-join-btn inline-flex items-center gap-3 bg-cyan text-black font-semibold px-10 py-5 rounded-xl text-lg" onclick="toggleJoinSection()">
+                <a id="joinToggleBtn" href="https://docs.google.com/forms/d/e/1FAIpQLSc8TNvi18tE4q423DZ4Qhu9YEgbAFZXUkUGXb886dV5kMA8CQ/viewform?usp=publish-editor" target="_blank" class="toggle-join-btn inline-flex items-center gap-3 bg-cyan text-black font-semibold px-10 py-5 rounded-xl text-lg">
                     <span class="join-text">Join AI Mantraas</span>
                     <svg class="toggle-arrow w-5 h-5 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
-                </button>
+                </a>
                 
                 <!-- Collapsible Content -->
                 <div id="joinToggleContent" class="toggle-content overflow-hidden max-h-0 transition-all duration-500 ease-in-out">
@@ -2668,8 +2668,8 @@
         }
     </script>
     
-    <!-- Registration Modal HTML -->
-    <div class="modal-overlay" id="registrationModal">
+    <!-- Registration Modal HTML (Hidden - using Google Form now) -->
+    <div class="modal-overlay" id="registrationModal" style="display: none;">
         <div class="modal-content" style="position: relative;">
             <button class="modal-close" onclick="closeModal()">&times;</button>
             

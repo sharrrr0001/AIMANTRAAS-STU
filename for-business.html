@@ -1341,103 +1341,96 @@
         document.getElementById('navLinks').classList.toggle('active');
     }
     
-    // Form submission handler
+    // Enhanced Form submission handler for backend integration
     document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('contactForm');
-        const submitBtn = document.querySelector('.submit-btn');
+        const businessForm = document.getElementById('businessForm');
+        const submitBtn = businessForm.querySelector('.submit-btn');
         
-        if (form) {
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        businessForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                company: document.getElementById('company').value.trim(),
+                industry: document.getElementById('industry').value,
+                teamsize: document.getElementById('teamsize').value,
+                priority: document.getElementById('priority').value,
+                message: document.getElementById('message').value.trim()
+            };
+            
+            // Validate required fields
+            if (!formData.name || !formData.email || !formData.company || !formData.priority) {
+                alert('Please fill in all required fields (Name, Email, Company, Priority)');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Show loading state
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span>Sending...</span>';
+            submitBtn.disabled = true;
+            
+            try {
+                // Send to backend API
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
                 
-                // Get form values
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
-                const company = document.getElementById('company').value;
-                const industry = document.getElementById('industry').value;
-                const teamsize = document.getElementById('teamsize').value;
-                const priority = document.getElementById('priority').value;
-                const message = document.getElementById('message').value;
+                const result = await response.json();
                 
-                // Validate required fields
-                if (!name || !email || !company) {
-                    alert('Please fill in all required fields (Name, Email, Company)');
-                    return;
-                }
-                
-                // Show loading state
-                const originalBtnText = submitBtn.innerHTML;
-                submitBtn.innerHTML = 'Sending...';
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.7';
-                
-                // Prepare form data
-                const formData = {
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    company: company,
-                    industry: industry,
-                    teamsize: teamsize,
-                    priority: priority,
-                    message: message,
-                    type: 'business'
-                };
-                
-                try {
-                    // Try to send to backend API
-                    const response = await fetch('/api/contact', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    });
+                if (response.ok && result.success) {
+                    // Success
+                    submitBtn.innerHTML = '<span>✓ Success!</span>';
+                    submitBtn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                    businessForm.reset();
                     
-                    if (response.ok) {
-                        // Show success message
-                        submitBtn.innerHTML = '✓ Sent Successfully!';
-                        submitBtn.style.background = 'linear-gradient(135deg, #00C47D, #00C47D)';
-                        form.reset();
-                        
-                        // Show success notification
-                        alert('Thank you! Your automation audit request has been submitted. We will contact you within 4 business hours.');
-                        
-                        // Reset button after 3 seconds
-                        setTimeout(() => {
-                            submitBtn.innerHTML = originalBtnText;
-                            submitBtn.disabled = false;
-                            submitBtn.style.opacity = '1';
-                        }, 3000);
-                    } else {
-                        throw new Error('Submission failed');
-                    }
-                } catch (error) {
-                    // Fallback: Store in localStorage and show success
-                    console.log('Backend not available, storing locally');
-                    
-                    // Store submissions in localStorage
-                    let submissions = JSON.parse(localStorage.getItem('business_inquiries') || '[]');
-                    submissions.push({...formData, timestamp: new Date().toISOString()});
-                    localStorage.setItem('business_inquiries', JSON.stringify(submissions));
-                    
-                    // Show success message
-                    submitBtn.innerHTML = '✓ Sent Successfully!';
-                    submitBtn.style.background = 'linear-gradient(135deg, #00C47D, #00C47D)';
-                    form.reset();
-                    
-                    alert('Thank you! Your automation audit request has been submitted. We will contact you within 4 business hours.');
-                    
-                    // Reset button after 3 seconds
                     setTimeout(() => {
+                        alert('Thank you! Your audit request has been received. We\'ll contact you within 24 hours.');
                         submitBtn.innerHTML = originalBtnText;
                         submitBtn.disabled = false;
-                        submitBtn.style.opacity = '1';
-                    }, 3000);
+                        submitBtn.style.background = '';
+                    }, 2000);
+                } else {
+                    throw new Error(result.message || 'Submission failed');
                 }
-            });
-        }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                
+                // Fallback: localStorage
+                let inquiries = JSON.parse(localStorage.getItem('business_inquiries') || '[]');
+                inquiries.unshift({
+                    ...formData,
+                    timestamp: new Date().toISOString(),
+                    fallback: true
+                });
+                localStorage.setItem('business_inquiries', JSON.stringify(inquiries.slice(0, 100))); // Limit storage
+                
+                // Show fallback success
+                submitBtn.innerHTML = '<span>✓ Saved Locally</span>';
+                submitBtn.style.background = 'linear-gradient(135deg, #F59E0B, #D97706)';
+                businessForm.reset();
+                
+                setTimeout(() => {
+                    alert('Saved locally (backend temporarily unavailable). We received your request!');
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                    submitBtn.style.background = '';
+                }, 2000);
+            }
+        });
     });
 </script>
 
@@ -1455,6 +1448,9 @@
         
         <div class="hero-ctas animate-fade-in delay-3">
             <a href="#contact" class="btn-primary">Get Your Free Automation Audit</a>
+            <a href="saarthi.html" class="btn-primary" style="background: linear-gradient(135deg, #8B5CF6, #00D4FF); position: relative; overflow: hidden;">
+                <span style="position: relative; z-index: 1;">SAARTHI — India's First A.I Sales Employee</span>
+            </a>
         </div>
     </div>
 </section>
@@ -1524,82 +1520,7 @@
     </div>
 </section>
 
-<!-- DEPARTMENTS -->
-<section class="departments">
-    <p class="eyebrow">What We Automate</p>
-    <div class="section-header" style="margin-top: 16px;">
-        <div class="section-header-left">
-            <h2>Every department. Every repetitive task.</h2>
-        </div>
-    </div>
 
-    <div class="dept-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px;">
-        <div class="dept-card" style="background: linear-gradient(145deg, rgba(0,212,255,0.08), rgba(139,92,246,0.08)); border: 1px solid rgba(0,212,255,0.2); border-radius: 20px; padding: 30px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 20px 40px rgba(0,212,255,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #00D4FF, #8B5CF6); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.8rem;">👥</div>
-            <div class="dept-name" style="font-size: 1.1rem; margin-bottom: 16px;">Human Resources</div>
-            <ul class="dept-tasks" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Employee onboarding workflows</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Leave & attendance tracking</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Offer letter generation</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Compliance documentation</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem;">Exit process automation</li>
-            </ul>
-            <div class="dept-stat" style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; font-weight: 800;">599%<small style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px;">HR automation growth</small></div>
-        </div>
-
-        <div class="dept-card" style="background: linear-gradient(145deg, rgba(139,92,246,0.08), rgba(0,212,255,0.08)); border: 1px solid rgba(139,92,246,0.2); border-radius: 20px; padding: 30px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 20px 40px rgba(139,92,246,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #8B5CF6, #00D4FF); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.8rem;">📈</div>
-            <div class="dept-name" style="font-size: 1.1rem; margin-bottom: 16px;">Sales</div>
-            <ul class="dept-tasks" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Lead capture & CRM entry</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Follow-up email sequences</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Proposal & quote generation</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Pipeline status updates</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem;">Meeting scheduling</li>
-            </ul>
-            <div class="dept-stat" style="background: linear-gradient(90deg, #8B5CF6, #00D4FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; font-weight: 800;">3hrs/day<small style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px;">saved per sales rep</small></div>
-        </div>
-
-        <div class="dept-card" style="background: linear-gradient(145deg, rgba(0,212,255,0.08), rgba(139,92,246,0.08)); border: 1px solid rgba(0,212,255,0.2); border-radius: 20px; padding: 30px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 20px 40px rgba(0,212,255,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #00D4FF, #8B5CF6); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.8rem;">📣</div>
-            <div class="dept-name" style="font-size: 1.1rem; margin-bottom: 16px;">Marketing</div>
-            <ul class="dept-tasks" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Email campaign automation</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Social media scheduling</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Lead scoring & routing</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Weekly performance reports</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem;">Content approval workflows</li>
-            </ul>
-            <div class="dept-stat" style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; font-weight: 800;">58%<small style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px;">marketers automating</small></div>
-        </div>
-
-        <div class="dept-card" style="background: linear-gradient(145deg, rgba(139,92,246,0.08), rgba(0,212,255,0.08)); border: 1px solid rgba(139,92,246,0.2); border-radius: 20px; padding: 30px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 20px 40px rgba(139,92,246,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #8B5CF6, #00D4FF); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.8rem;">💰</div>
-            <div class="dept-name" style="font-size: 1.1rem; margin-bottom: 16px;">Finance</div>
-            <ul class="dept-tasks" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Invoice generation & tracking</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Expense approval workflows</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Payment reconciliation</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">MIS report automation</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem;">Vendor management alerts</li>
-            </ul>
-            <div class="dept-stat" style="background: linear-gradient(90deg, #8B5CF6, #00D4FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; font-weight: 800;">80%<small style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px;">tasks automatable</small></div>
-        </div>
-
-        <div class="dept-card" style="background: linear-gradient(145deg, rgba(0,212,255,0.08), rgba(139,92,246,0.08)); border: 1px solid rgba(0,212,255,0.2); border-radius: 20px; padding: 30px; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 20px 40px rgba(0,212,255,0.2)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #00D4FF, #8B5CF6); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.8rem;">⚙️</div>
-            <div class="dept-name" style="font-size: 1.1rem; margin-bottom: 16px;">Operations</div>
-            <ul class="dept-tasks" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Inventory alerts & reorder</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Vendor communication</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">SLA monitoring & alerts</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05);">Cross-team task routing</li>
-                <li style="padding: 6px 0; color: rgba(255,255,255,0.7); font-size: 0.85rem;">Operational dashboards</li>
-            </ul>
-            <div class="dept-stat" style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; font-weight: 800;">30%<small style="display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px;">cost reduction</small></div>
-        </div>
-    </div>
-</section>
 
 <!-- PROCESS -->
 <section class="process">
@@ -1697,18 +1618,87 @@
         </div>
     </div>
 
-    <div class="contact-form" id="contactForm">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSf0OVcfZs1m0x2u0yjCNqMZYWQVY_2gSgmvsGJuEmuNDs7vJg/viewform?usp=dialog" target="_blank" class="submit-btn" style="display: inline-block; text-align: center;">
-            Book Your Free Audit →
-        </a>
-    </div>
+        <div class="contact-form" id="contactForm">
+            <form id="businessForm">
+                <div class="form-title">Free Automation Audit</div>
+                <div class="form-subtitle">Get your personalized automation roadmap in 30 minutes</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="email" name="email" placeholder="john@company.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+91 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label>Company *</label>
+                        <input type="text" id="company" name="company" placeholder="Your Company" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Industry</label>
+                        <select id="industry" name="industry">
+                            <option value="">Select Industry</option>
+                            <option value="tech">Technology</option>
+                            <option value="finance">Finance</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="retail">Retail</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Team Size</label>
+                        <select id="teamsize" name="teamsize">
+                            <option value="">Team Size</option>
+                            <option value="1-10">1-10</option>
+                            <option value="11-50">11-50</option>
+                            <option value="51-200">51-200</option>
+                            <option value="200+">200+</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Top Priority *</label>
+                    <select id="priority" name="priority" required>
+                        <option value="">What's your biggest pain point?</option>
+                        <option value="sales">Sales Pipeline</option>
+                        <option value="hr">HR/Recruiting</option>
+                        <option value="finance">Finance/Accounting</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="operations">Operations</option>
+                        <option value="customer-support">Customer Support</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Message (Optional)</label>
+                    <textarea id="message" name="message" placeholder="Tell us about your biggest workflow challenge..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Book Free Audit →</button>
+                <p class="form-privacy">We respect your privacy. No spam, ever.</p>
+            </form>
+        </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
     <a href="index.html" class="logo">AI <span>Mantraas</span></a>
     <div class="footer-links">
-        <a href="#">SAARTHI (AI Sales Employee)</a>
+        <a href="saarthi.html">SAARTHI (AI Sales Employee)</a>
         <a href="#">LinkedIn</a>
         <a href="index.html#contact">Contact</a>
     </div>

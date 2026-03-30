@@ -168,6 +168,11 @@ def index_html():
     """Serve index.html explicitly."""
     return send_from_directory(PROJECT_ROOT, 'index.html')
 
+@app.route('/saarthi.html')
+def saarthi():
+    """Serve saarthi.html."""
+    return send_from_directory(PROJECT_ROOT, 'saarthi.html')
+
 @app.route('/for-business.html')
 def for_business():
     """Serve for-business.html."""
@@ -192,6 +197,32 @@ def api_index():
         'status': 'running',
         'google_sheets_connected': sheets_manager is not None and sheets_manager.is_connected()
     })
+
+
+# ==================== Business Contact ====================
+
+@app.route('/api/contact', methods=['POST'])
+def contact():
+    """Handle business contact forms."""
+    if request.method == 'POST':
+        contact_data = request.get_json()
+        
+        # Add timestamp and type
+        contact_data['id'] = str(datetime.now().timestamp())
+        contact_data['created_at'] = datetime.now().isoformat()
+        contact_data['status'] = 'new'
+        
+        # Load existing data
+        contacts_list = load_json_file('business_inquiries.json', [])
+        contacts_list.append(contact_data)
+        
+        # Save to local file
+        save_json_file('business_inquiries.json', contacts_list)
+        
+        # Try to save to Google Sheets
+        save_to_google_sheets('BusinessInquiries', contact_data)
+        
+        return jsonify({'success': True, 'message': 'Contact form submitted successfully', 'data': contact_data})
 
 
 # ==================== Join Requests ====================
@@ -576,6 +607,7 @@ def initialize_app():
     # Create default data files if they don't exist
     default_files = {
         'join_requests.json': [],
+        'business_inquiries.json': [],
         'users.json': [],
         'lectures.json': [],
         'live_classes.json': [],

@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
     tailwind.config = {
@@ -302,17 +303,18 @@
     }
 
     /* HERO */
-    .hero {
-        min-height: 100vh; padding: 80px 40px 100px;
-        display: grid;
-        grid-template-columns: 1.1fr minmax(320px, 620px);
-        gap: 4rem;
-        align-items: center;
+.hero {
+        min-height: 100vh; padding: 80px 24px 80px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
         position: relative;
     }
     
     .hero-left {
-        max-width: 650px;
+        flex: 1;
+        max-width: 100%;
         text-align: left;
     }
     
@@ -320,12 +322,14 @@
         text-align: left !important;
     }
     
-    .hero-right {
+.hero-right {
+        order: 3;
         width: 100%;
-        max-width: 620px;
-        justify-self: end;
-        position: relative;
-        z-index: 1;
+        max-width: 100%;
+        max-height: 60vh;
+        align-self: center;
+        margin-top: 2rem;
+        overflow: hidden;
     }
     .hero-right img {
         display: block;
@@ -390,7 +394,7 @@
     .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); }
 
     /* SECTIONS — consistent spacing */
-    section { padding: 120px 80px; position: relative; }
+    section { padding: 60px 40px; position: relative; }
     .section-header { margin-bottom: 48px; }
     h2 {
         font-family: 'Sora', sans-serif; font-size: 2.2rem; font-weight: 800;
@@ -629,6 +633,19 @@
     .delay-3 { animation-delay: 0.5s; }
     .delay-4 { animation-delay: 0.7s; }
 
+    /* CONTAINER & GRID */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .grid-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .card-fill { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; }
+    .card-padding { padding: 36px 28px; }
+    .card-content { font-size: 0.88rem; color: #71717A; line-height: 1.65; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-heading { margin-bottom: 0.5rem; }
+    .mb-subtext { margin-bottom: 1rem; }
+    .mb-section-header { margin-bottom: 3rem; }
+    .section-medium { padding: 60px 40px; }
+
     /* RESPONSIVE */
     @media (max-width: 1024px) {
         section { padding: 100px 48px; }
@@ -637,27 +654,54 @@
         .steps-grid { grid-template-columns: repeat(2, 1fr); }
         .steps-grid::before { display: none; }
         .cta-section { padding: 100px 48px; }
+        .grid-cards { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 768px) {
+@media (max-width: 768px) {
         nav { padding: 16px 20px; }
-        .hero { padding: 120px 24px 80px; min-height: auto; grid-template-columns: 1fr; gap: 2rem; }
-        .hero-right { justify-self: center; max-width: 100%; }
-        .hero h1 { font-size: 2rem; }
+        .hero { 
+            padding: 80px 20px 40px; 
+            min-height: auto; 
+            gap: 1.5rem; 
+            display: flex;
+            flex-direction: column;
+        }
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .hero-left { order: 1; }
+        .hero-right { 
+            order: 2; 
+            max-width: 100%; 
+            margin-top: 1rem; 
+        }
+        .hero-right img {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+        }
+        .hero h1 { font-size: 2rem; line-height: 1.2; }
         .hero-sub { font-size: 1rem; }
         section { padding: 80px 24px; }
+        .section-medium { padding: 60px 20px; }
         h2 { font-size: 1.8rem; }
         .section-header { margin-bottom: 36px; }
         .why-grid { grid-template-columns: 1fr; gap: 16px; }
+        .grid-cards { grid-template-columns: 1fr; gap: 16px; }
         .comparison-header, .comparison-row { grid-template-columns: 1fr; }
         .comparison-label { margin: 14px 0 4px; }
         .steps-grid { grid-template-columns: 1fr; gap: 32px; }
-        .integration-badges { gap: 12px; }
+        .steps-grid::before { display: none; }
+        .integration-badges { gap: 12px; flex-wrap: wrap; }
         .integration-badge { padding: 18px 26px; min-width: 125px; }
         .cta-section { padding: 80px 24px; }
         footer { padding: 24px 24px; flex-direction: column; gap: 16px; text-align: center; }
         .footer-links { flex-wrap: wrap; justify-content: center; }
-        .hero-ctas { flex-direction: column; }
-        .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+        .hero-ctas { flex-direction: column; width: 100%; gap: 12px; }
+        .hero-ctas a { width: 100%; text-align: center; }
+        .btn-primary, .btn-secondary { width: 100%; text-align: center; box-sizing: border-box; }
         .robot-wrapper { margin-bottom: 36px; }
         .robot { width: 130px; height: 170px; }
         .r-head { width: 74px; height: 56px; }
@@ -667,12 +711,43 @@
         .r-eye.r { right: 10px; }
         .r-body { width: 92px; height: 64px; top: 62px; }
         .r-arm { top: 68px; }
+        .eyebrow { font-size: 1.1rem; letter-spacing: 2px; }
+        .eyebrow::before { width: 20px; }
+        .section-sub { font-size: 0.9rem; }
+        .why-icon { width: 44px; height: 44px; }
+        .step-num { width: 80px; height: 80px; }
+        .step-num .label { font-size: 1.4rem; }
+        .step-num .sub { font-size: 0.55rem; }
     }
     @media (max-width: 480px) {
-        .hero h1 { font-size: 1.7rem; }
+        .hero h1 { font-size: 1.7rem; letter-spacing: -0.5px; }
+        .hero-sub { font-size: 0.95rem; }
+        .hero-badge { font-size: 0.7rem; padding: 6px 14px; }
         .step-num { width: 72px; height: 72px; }
         .step-num .label { font-size: 1.2rem; }
         section { padding: 64px 18px; }
+        .section-medium { padding: 50px 18px; }
+        .cta-section h2 { font-size: 1.6rem; }
+        .cta-section p { font-size: 0.95rem; }
+        .integration-badge { padding: 14px 20px; min-width: 100px; }
+        .integration-badge .icon { font-size: 1.5rem; }
+        .integration-badge .name { font-size: 0.75rem; }
+        .grid-cards { gap: 12px; }
+        .card-padding { padding: 24px 20px; }
+        .why-card h3 { font-size: 0.95rem; }
+        .step-card h3 { font-size: 0.95rem; }
+    }
+
+    /* RESPONSIVE TOUCH OPTIMIZATION */
+    @media (max-width: 768px) {
+        a, button { 
+            min-height: 44px; 
+            touch-action: manipulation;
+        }
+        .btn-primary, .btn-secondary {
+            padding: 16px 24px;
+            min-height: 52px;
+        }
     }
 
     html, body { max-width: 100vw; overflow-x: hidden; }
@@ -683,7 +758,7 @@
 
 <!-- NAV -->
 <nav>
-    <a href="index.html" class="logo"><span>AIMANTRAAS</span></a>
+    <a href="index.html" class="logo">AIM<span style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">ANTRAAS</span></a>
     <div class="nav-links" id="navLinks">
         <a href="for-business.html" class="cta-nav" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; margin-right: 10px;">For Business</a>
         <a href="#contact" class="cta-nav">Book a Demo →</a>
@@ -694,28 +769,115 @@
 <style>
     .mobile-menu-btn { display: block !important; }
     @media (min-width: 769px) { .mobile-menu-btn { display: none !important; } }
-    @media (max-width: 768px) {
+@media (max-width: 768px) {
+        nav { 
+            padding: 14px 20px !important; 
+            flex-wrap: wrap;
+        }
+        nav .logo { font-size: 1.1rem; }
         .nav-links {
             display: none; position: absolute; top: 100%; left: 0; right: 0;
-            background: rgba(10,10,15,0.98); padding: 20px; flex-direction: column;
-            gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(10,10,15,0.98); padding: 16px; flex-direction: column;
+            gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .nav-links.active { display: flex; }
-        .nav-links a { width: 100%; text-align: center; }
+        .nav-links a { 
+            width: 100%; 
+            text-align: center; 
+            padding: 12px !important;
+            font-size: 0.9rem;
+        }
+        .hero { 
+            padding: 80px 20px 40px; 
+            min-height: auto; 
+            gap: 1.5rem; 
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .hero-left { 
+            order: 1; 
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: none !important;
+        }
+        .hero-right { 
+            order: 2; 
+            width: 100% !important;
+            max-width: 100% !important; 
+            margin-top: 0 !important;
+            overflow: hidden;
+            flex: none !important;
+        }
+        .hero-right img {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 280px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+        }
+        .hero h1 { font-size: 2rem; line-height: 1.2; }
+        .hero-sub { font-size: 1rem; }
+        section { padding: 80px 24px; }
+        .section-medium { padding: 60px 20px; }
+        h2 { font-size: 1.8rem; }
+        .section-header { margin-bottom: 36px; }
+        .why-grid { grid-template-columns: 1fr; gap: 16px; }
+        .grid-cards { grid-template-columns: 1fr; gap: 16px; }
+        .comparison-header, .comparison-row { grid-template-columns: 1fr; }
+        .comparison-label { margin: 14px 0 4px; }
+        .steps-grid { grid-template-columns: 1fr; gap: 32px; }
+        .steps-grid::before { display: none; }
+        .integration-badges { gap: 12px; flex-wrap: wrap; }
+        .integration-badge { padding: 18px 26px; min-width: 125px; }
+        .cta-section { padding: 80px 24px; }
+        footer { padding: 24px 24px; flex-direction: column; gap: 16px; text-align: center; }
+        .footer-links { flex-wrap: wrap; justify-content: center; }
+        .hero-ctas { flex-direction: column; width: 100%; gap: 12px; }
+        .hero-ctas a { width: 100%; text-align: center; }
+        .btn-primary, .btn-secondary { width: 100%; text-align: center; box-sizing: border-box; }
+        .robot-wrapper { margin-bottom: 36px; }
+        .robot { width: 130px; height: 170px; }
+        .r-head { width: 74px; height: 56px; }
+        .r-visor { width: 60px; height: 30px; }
+        .r-eye { width: 12px; height: 12px; }
+        .r-eye.l { left: 10px; }
+        .r-eye.r { right: 10px; }
+        .r-body { width: 92px; height: 64px; top: 62px; }
+        .r-arm { top: 68px; }
+        .eyebrow { font-size: 1.1rem; letter-spacing: 2px; }
+        .eyebrow::before { width: 20px; }
+        .section-sub { font-size: 0.9rem; }
+        .why-icon { width: 44px; height: 44px; }
+        .step-num { width: 80px; height: 80px; }
+        .step-num .label { font-size: 1.4rem; }
+        .step-num .sub { font-size: 0.55rem; }
+    }
+        nav .logo { font-size: 1.1rem; }
+        .nav-links {
+            display: none; position: absolute; top: 100%; left: 0; right: 0;
+            background: rgba(10,10,15,0.98); padding: 16px; flex-direction: column;
+            gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-links.active { display: flex; }
+        .nav-links a { 
+            width: 100%; 
+            text-align: center; 
+            padding: 12px !important;
+            font-size: 0.9rem;
+        }
     }
 </style>
 <script>function toggleMobileMenu() { document.getElementById('navLinks').classList.toggle('active'); }</script>
 
 <!-- HERO -->
-<section class="hero">
-    <div class="hero-left">
-        <div class="hero-badge animate-fade-in" style="margin-top: -20px;">Launching SAARTHI</div>
-    
-        <h1 class="animate-fade-in delay-1">
+<section class="hero-section hero" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 3rem; max-width: 1400px; margin: 0 auto;">
+    <div class="hero-left" style="flex: 1; max-width: 55%;">
+        <div class="hero-badge animate-fade-in mb-6">Launching SAARTHI</div>
+        <h1 class="animate-fade-in delay-1 mb-6">
             Stop hunting leads.<br>
             <em>Start closing deals.</em>
         </h1>
-        <p class="hero-sub animate-fade-in delay-2">
+        <p class="hero-sub animate-fade-in delay-2 mb-6">
             <strong>SAARTHI</strong> is the autonomous outreach system that finds, writes, follows up, and books meetings for you. Built for B2B teams that need consistent pipeline without more headcount.
         </p>
         <div class="hero-ctas animate-fade-in delay-3">
@@ -723,81 +885,39 @@
             <a href="#how-it-works" class="btn-secondary">See How It Works</a>
         </div>
     </div>
-    
-    <div class="hero-right">
-        <img src="/db2.png" alt="SAARTHI Dashboard">
-
-
+    <div class="hero-right" style="flex: 1; max-width: 45%;">
+        <img src="db2.png" alt="SAARTHI Dashboard" style="width: 100%; height: auto; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
     </div>
 </section>
 
 <!-- WHY SAARTHI WINS -->
-<section class="why-section">
-    <div class="section-header">
-        <p class="eyebrow">Why SAARTHI Wins</p>
-        <h2>Built different. Delivers different.</h2>
-    </div>
-    <div class="why-grid">
-        <div class="why-card">
-            <div class="why-icon">🔄</div>
-            <h3>Self-Optimizing Playbooks</h3>
-            <p>Tuned to replies, not opens. SAARTHI learns from real engagement signals and continuously refines its outreach strategy.</p>
+<section class="section-medium why-section">
+    <div class="container">
+        <div class="section-header text-center mb-section-header">
+            <p class="eyebrow mb-heading">Why SAARTHI Wins</p>
+            <h2 class="mb-subtext text-center">Built different. Delivers different.</h2>
         </div>
-        <div class="why-card">
-            <div class="why-icon">🎯</div>
-            <h3>Dynamic Personalization at Scale</h3>
-            <p>Live firmographic signals ensure every message feels hand-crafted — because it is, just not by a human.</p>
-        </div>
-        <div class="why-card">
-            <div class="why-icon">🔁</div>
-            <h3>Full-Loop Automation</h3>
-            <p>Sourcing → Sequencing → Scheduling → CRM Sync. The entire pipeline runs itself — from first touch to booked meeting.</p>
+        <div class="grid-cards">
+            <div class="why-card card-fill card-padding">
+                <div class="why-icon mb-6">🔄</div>
+                <h3 class="mb-4">Self-Optimizing Playbooks</h3>
+                <p class="card-content">Tuned to replies, not opens. SAARTHI learns from real engagement signals and continuously refines its outreach strategy.</p>
+            </div>
+            <div class="why-card card-fill card-padding">
+                <div class="why-icon mb-6">🎯</div>
+                <h3 class="mb-4">Dynamic Personalization at Scale</h3>
+                <p class="card-content">Live firmographic signals ensure every message feels hand-crafted — because it is, just not by a human.</p>
+            </div>
+            <div class="why-card card-fill card-padding">
+                <div class="why-icon mb-6">🔁</div>
+                <h3 class="mb-4">Full-Loop Automation</h3>
+                <p class="card-content">Sourcing → Sequencing → Scheduling → CRM Sync. The entire pipeline runs itself — from first touch to booked meeting.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- COMPARISON -->
-<section class="comparison-section" style="text-align: center;">
-    <div class="section-header" style="text-align: center;">
-        <p class="eyebrow" style="justify-content: center;">Outreach Agency vs SAARTHI</p>
-        <h2 style="margin: 0 auto 12px;">Systemized &gt; Manual</h2>
-        <p class="section-sub" style="margin: 0 auto; text-align: center;">See why the old way can't compete.</p>
-    </div>
 
-    <div class="comparison-center">
-        <div class="comp-col comp-agency">
-            <div class="comp-col-header agency-header">
-                <span class="comp-col-icon">🏢</span>
-                <h3>Agency</h3>
-                <span class="comp-col-tag">Old Way</span>
-            </div>
-            <div class="comp-item"><span class="comp-label">Lead Sourcing</span><p>Manual list-building; variable quality</p></div>
-            <div class="comp-item"><span class="comp-label">Copywriting</span><p>Copy depends on individual writers</p></div>
-            <div class="comp-item"><span class="comp-label">Deliverability</span><p>Hit-or-miss inbox placement</p></div>
-            <div class="comp-item"><span class="comp-label">Follow-ups</span><p>Follow-up inconsistency across reps</p></div>
-            <div class="comp-item"><span class="comp-label">Ownership</span><p>Dependent on agency's team</p></div>
-            <div class="comp-item"><span class="comp-label">Reporting</span><p>Reporting arrives weekly</p></div>
-        </div>
-
-        <div class="comp-vs">
-            <div class="comp-vs-circle">VS</div>
-        </div>
-
-        <div class="comp-col comp-saarthi-col">
-            <div class="comp-col-header saarthi-header">
-                <span class="comp-col-icon">🤖</span>
-                <h3>SAARTHI</h3>
-                <span class="comp-col-tag saarthi-tag">AI-Powered</span>
-            </div>
-            <div class="comp-item saarthi-item"><span class="comp-label">Lead Sourcing</span><p>Personalised for every single prospect.</p></div>
-            <div class="comp-item saarthi-item"><span class="comp-label">Copywriting</span><p>Persona-aware messaging at scale.</p></div>
-            <div class="comp-item saarthi-item"><span class="comp-label">Deliverability</span><p>Inbox delivered. Every time. No spam.</p></div>
-            <div class="comp-item saarthi-item"><span class="comp-label">Follow-ups</span><p>Adaptive sequencing that never drops the ball.</p></div>
-            <div class="comp-item saarthi-item"><span class="comp-label">Ownership</span><p>Your system. Your pipeline. Always.</p></div>
-            <div class="comp-item saarthi-item"><span class="comp-label">Reporting</span><p>Runs every day. Never stops. Never forgets.</p></div>
-        </div>
-    </div>
-</section>
 
 <!-- HOW SAARTHI WORKS -->
 <section class="how-section" id="how-it-works">
@@ -892,7 +1012,7 @@
 
 <!-- FOOTER -->
 <footer>
-    <a href="index.html" class="logo">AI <span>Mantraas</span></a>
+    <a href="index.html" class="logo">AIM<span style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">ANTRAAS</span></a>
     <div class="footer-links">
         <a href="for-business.html">For Business</a>
         <a href="saarthi.html">SAARTHI</a>

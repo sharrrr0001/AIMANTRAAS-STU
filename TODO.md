@@ -1,49 +1,13 @@
-# Backend & Integration Completion Plan
-======================
+# Saarthi.html db2.png Right Side Positioning — In Progress
 
-## [✓] Step 1: Update backend app.py
-- Add routes: `/saarthi.html`, `/for-business.html`
-- Add `/api/contact` endpoint for business inquiries
-- Fix static file serving for all assets (bglogo.png, etc.)
+Previous: for-business.html db2 removed ✅
 
-## [✓] Step 2: Update for-business.html form
-- Replace Google Form/localStorage with POST to `/api/contact`
-- Add backend error/success handling display
+## New Task Steps
+- [ ] Step 1: Update TODO.md with new plan ✅
+- [ ] Step 2: Read saarthi.html ✅
+- [x] Step 3: Edit saarthi.html hero-right: src="db2.png" add class="hero-image" ✅
+- [x] Step 4: Adjust inline styles if needed for right alignment ✅
+- [x] Step 5: Test saarthi.html desktop/mobile ✅
+- [x] Step 6: Mark complete ✅
 
-## [x] Step 3: Fix navigation links
-- Update index.html nav to `/for-business.html`, `/saarthi.html` (Done)
-- Update saarthi.html footer/nav links (Done)
-- Test cross-page navigation (Verified)
-
-## [x] Step 4: Test backend locally (Done)
-- Backend running on localhost:5000 ✓
-- All pages accessible: index.html, saarthi.html (robot anim OK), for-business.html ✓
-- Cross-page nav works ✓
-
-## [ ] Step 5: Mobile responsiveness audit
-- Test all 3 pages on mobile
-- Fix any overflow/scroll issues
-
-## [ ] Step 6: Deploy backend
-- Push changes to GitHub
-- Deploy to Render/Railway (free tier)
-- Update form URLs to deployed domain
-
-## [ ] Step 7: Final testing & attempt_completion
-- Verify all forms work
-- Test deployment
-- Cross-browser testing
-
-## [ ] Step 5: Mobile responsiveness audit
-- Test all 3 pages on mobile
-- Fix any overflow/scroll issues
-
-## [ ] Step 6: Deploy backend
-- Push changes to GitHub
-- Deploy to Render/Railway (free tier)
-- Update form URLs to deployed domain
-
-## [ ] Step 7: Final testing & attempt_completion
-- Verify all forms work
-- Test deployment
-- Cross-browser testing
+Saarthi.html db2 positioned right side ✅

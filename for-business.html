@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
     tailwind.config = {
@@ -169,12 +170,11 @@
         color: white;
         text-decoration: none;
     }
-
     .logo span {
-        background: linear-gradient(90deg, #00D4FF 0%, #8B5CF6 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        background: linear-gradient(90deg, #00D4FF 0%, #8B5CF6 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
     }
 
     nav a.cta-nav {
@@ -193,29 +193,26 @@
     }
 
     /* HERO */
-    .hero {
+.hero {
         min-height: 100vh;
-        display: grid;
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
         gap: 0;
-        padding-top: 80px;
+        padding: 60px 20px 20px 20px;
         position: relative;
     }
 
-    .hero-left {
-        padding: 100px 40px 80px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        max-width: 800px;
-        margin: 0;
+.hero-left {
+        max-width: 10000px;
+        margin-left: 1px;
+        margin-right: 1000px;
         width: 100%;
         position: relative;
         z-index: 10;
         text-align: left;
     }
     
-    .hero-left * {
+.hero-left * {
         text-align: left !important;
     }
 
@@ -449,7 +446,7 @@
 
     /* STATS SECTION */
     .stats-section {
-        padding: 100px 80px;
+        padding: 60px 40px;
         background: #050505;
     }
 
@@ -1293,7 +1290,7 @@
 
 <!-- NAV -->
 <nav>
-    <a href="index.html" class="logo"> <span>AIMANTRAAS</span></a>
+    <a href="index.html" class="logo">AIM<span style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">ANTRAAS</span></a>
     <div class="nav-links" id="navLinks">
         <a href="index.html#contact" class="cta-nav">Get Free Automation Audit →</a>
     </div>
@@ -1435,23 +1432,25 @@
 </script>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero-section hero">
     <div class="hero-bg"></div>
-    <div class="hero-left">
-        <p class="eyebrow animate-fade-in" style="font-size: 1.6rem;">For Business</p>
-        <h1 style="font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.1; margin-bottom: 35px; max-width: 1000px; text-align: left;">
-            <span style="color: white;">Your Team Deserves</span><br> <span style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Better Than Manual Work</span>
-        </h1>
-        <p class="hero-sub animate-fade-in delay-2" style="font-size: 1.35rem; max-width: 580px; line-height: 1.8; margin-bottom: 48px; text-align: left;">
-            <strong style="color: white;">HR, Sales, Marketing, Finance, Operations</strong> — every department in your business has repetitive work eating 40–60% of your team's time. We build intelligent systems that eliminate that chaos, permanently.
-        </p>
-        
-        <div class="hero-ctas animate-fade-in delay-3">
-            <a href="#contact" class="btn-primary">Get Your Free Automation Audit</a>
-            <a href="saarthi.html" class="btn-primary" style="background: linear-gradient(135deg, #8B5CF6, #00D4FF); position: relative; overflow: hidden;">
-                <span style="position: relative; z-index: 1;">SAARTHI — India's First A.I Sales Employee</span>
-            </a>
+    <div class="container hero-content">
+        <div class="hero-left">
+            <p class="eyebrow mb-heading animate-fade-in">For Business</p>
+            <h1 class="mb-subtext animate-fade-in delay-1" style="font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1.1;">
+                <span style="color: white;">Your Team Deserves</span><br> <span style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Better Than Manual Work</span>
+            </h1>
+        <p class="hero-sub animate-fade-in delay-2 mb-cta" style="font-size: 1.35rem; max-width: 580px; line-height: 1.8;">
+                <strong style="color: white;">HR, Sales, Marketing, Finance, Operations</strong> — every department in your business has repetitive work eating 40–60% of your team's time. We build intelligent systems that eliminate that chaos, permanently.
+            </p>
+            <div class="hero-ctas animate-fade-in delay-3">
+                <a href="#contact" class="btn-primary">Get Your Free Automation Audit</a>
+                <a href="saarthi.html" class="btn-primary" style="background: linear-gradient(135deg, #8B5CF6, #00D4FF); position: relative; overflow: hidden;">
+                    <span style="position: relative; z-index: 1;">SAARTHI — India's First A.I Sales Employee</span>
+                </a>
+            </div>
         </div>
+        
     </div>
 </section>
 
@@ -1471,11 +1470,9 @@
 
 <!-- STATS -->
 <section class="stats-section">
-    <div class="section-header">
-        <div class="section-header-left">
-            <p class="eyebrow" style="font-size: 1.5rem;">The Numbers Don't Lie</p>
-            <h2 style="font-size: 1rem;">Automation is no longer optional.</h2>
-        </div>
+<div class="section-header text-center mb-section-header">
+        <p class="eyebrow mb-heading" style="font-size: 1.5rem;">The Numbers Don't Lie</p>
+        <h2 class="mb-subtext">Automation is no longer optional.</h2>
     </div>
 
     <div class="stats-grid">
@@ -1696,7 +1693,7 @@
 
 <!-- FOOTER -->
 <footer>
-    <a href="index.html" class="logo">AI <span>Mantraas</span></a>
+    <a href="index.html" class="logo">AIM<span style="background: linear-gradient(90deg, #00D4FF, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">ANTRAAS</span></a>
     <div class="footer-links">
         <a href="saarthi.html">SAARTHI (AI Sales Employee)</a>
         <a href="#">LinkedIn</a>

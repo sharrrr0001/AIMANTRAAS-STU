@@ -1,13 +1,30 @@
-# Saarthi.html db2.png Right Side Positioning — In Progress
+# Task: Remove Popup from Website
 
-Previous: for-business.html db2 removed ✅
+## Information Gathered
+After analyzing the `index.html` file, I found the following popup-related code:
 
-## New Task Steps
-- [ ] Step 1: Update TODO.md with new plan ✅
-- [ ] Step 2: Read saarthi.html ✅
-- [x] Step 3: Edit saarthi.html hero-right: src="db2.png" add class="hero-image" ✅
-- [x] Step 4: Adjust inline styles if needed for right alignment ✅
-- [x] Step 5: Test saarthi.html desktop/mobile ✅
-- [x] Step 6: Mark complete ✅
+1. **Popup HTML Structure** (lines 225-280):
+   - `<div class="popup-overlay" id="popup">` - Main popup container
+   - `<button id="popupClose">` - Close button
+   - `<button id="learnMoreBtn">` - Learn more button
+   - Contains heading, description, stats boxes
 
-Saarthi.html db2 positioned right side ✅
+2. **Popup CSS Styles** (lines 175-200):
+   - `.popup-overlay` class for the modal overlay
+   - Handles positioning, background blur, z-index
+
+3. **Popup JavaScript** (lines 1020-1040):
+   - `initPopup()` function that shows popup after 800ms
+   - Event listeners for close and learn more buttons
+   - Click handler for overlay
+
+## Plan
+1. **Remove Popup CSS** - Comment out the `.popup-overlay` styles ✅ DONE
+2. **Disable Popup JavaScript** - Comment out the initPopup() call ✅ DONE
+3. Keep popup HTML in place (can be fully removed later if needed)
+
+## Changes Made
+- Added `/* Popup has been removed */` comment in CSS section
+- Changed `initPopup();` to `// initPopup(); // DISABLED - popup removed` in JavaScript
+
+## Status: COMPLETED ✅

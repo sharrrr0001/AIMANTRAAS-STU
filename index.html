@@ -448,25 +448,7 @@
             50% { transform: translate(10px, -10px); opacity: 0.8; }
         }
 
-        .popup-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+/* Popup has been removed */
 
         .reveal {
             opacity: 0;
@@ -1649,9 +1631,7 @@
         </div>
     </header>
 
-    <!-- Popup Modal -->
-    <div class="popup-overlay" id="popup">
-        <div class="glass-card rounded-2xl p-8 md:p-10 max-w-xl mx-4 text-center relative inner-glow">
+
             <button class="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors" id="popupClose">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -1664,40 +1644,7 @@
                 </svg>
             </div>
             
-            <h2 class="font-display text-2xl md:text-3xl font-bold text-white tight-tracking mb-4">
-                Get ahead in the field of AI by learning how to build no-code AI agents — whether you come from a tech or non-tech background.
-            </h2>
-            
-            <p class="text-slate-400 mb-6 leading-relaxed">
-                Join the revolution and become an AI agent builder today.
-            </p>
-            
-            <div class="flex flex-wrap justify-center gap-4 mb-6">
-                <div class="bg-white/5 rounded-xl px-5 py-3 border border-white/10">
-                    <div class="text-2xl font-display font-bold text-cyan">Automation</div>
-                    <div class="text-xs text-slate-500">AI Jobs Increased</div>
-                </div>
-                <div class="bg-white/5 rounded-xl px-5 py-3 border border-white/10">
-                    <div class="text-2xl font-display font-bold text-purple-400">Vibe Coding</div>
-                    <div class="text-xs text-slate-500">Demand for Experts</div>
-                </div>
-                <div class="bg-white/5 rounded-xl px-5 py-3 border border-white/10">
-                    <div class="text-2xl font-display font-bold text-white">AI Agents</div>
-                    <div class="text-xs text-slate-500">Builders Need</div>
-                </div>
-            </div>
-            
-            <p class="text-slate-400 mb-8 text-sm">
-                Companies need AI workflow builders, not just AI tool users.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                <button id="learnMoreBtn" class="border border-white/20 text-white font-medium px-6 py-3 rounded-xl text-sm hover:bg-white/5 transition-colors">
-                    Learn More ↓
-                </button>
-            </div>
-        </div>
-    </div>
+            <
 
     <!-- Hero Section - Two Column Layout -->
     <section class="relative min-h-screen flex items-center">
@@ -2401,9 +2348,9 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
             createNetworkNodes();
-            initPopup();
+            // initPopup(); // DISABLED - popup removed
             initScrollAnimations();
             initSmoothScroll();
             initParallax();
